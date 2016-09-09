@@ -15,100 +15,111 @@ import math
 #Variables
 waitincrement = 0
 jump = 0
+choicemade = 0
+
+#Message Display
+ask =    "        [" + mod.colors.YELLOW + "?" + mod.colors.DEFAULT + "] "
+answer = "           [" + mod.colors.LCYAN + ">" + mod.colors.DEFAULT + "] "
+error =  "           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] "
+info =   "        [" + mod.colors.LGREEN + "*" + mod.colors.DEFAULT + "] "
 
 #Config Infos
-MODE = "Honey Pot"
-DHCPStart = "10.0.0.50"
-DHCPStop = "10.0.0.150"
-DNS = "189.23.65.345"
-ESSID = "Happy Fox"
-CHANNEL = "6"
-PASS = "S3CR3TP4SSW0RD"
+MODE = "Not Configured"
+DHCPStart = "Not Configured"
+DHCPStop = "Not Configured"
+DNS = "Not Configured"
+ESSID = "Not Configured"
+CHANNEL = "Not Configured"
+PASS = "Not Configured"
 STATUS = "Inactive"
 
 def InfosHeader():
     os.system('clear')
     #Printing informations about the config of the AP
     print(mod.colors.LGREEN + 
-  "\n          ******************************" + mod.colors.DEFAULT)
+  "\n                ************************************" + mod.colors.DEFAULT)
     print(mod.colors.LCYAN +
-    "           EasyRogue v0.1 Configuration\n" + mod.colors.DEFAULT
+    "                    EasyRogue v0.1 Configuration\n" + mod.colors.DEFAULT
     )
     print(
-    "           Fake AP Mode : " + mod.colors.LRED + (MODE) + mod.colors.DEFAULT)
+    "                    Fake AP Mode : " + mod.colors.LRED + (MODE) + mod.colors.DEFAULT)
     print(
-    "           ESSID        : " + mod.colors.LRED + ESSID + mod.colors.DEFAULT)
+    "                    ESSID        : " + mod.colors.LRED + ESSID + mod.colors.DEFAULT)
     print(
-    "           Channel      : " + mod.colors.LRED + CHANNEL + mod.colors.DEFAULT)
+    "                    Channel      : " + mod.colors.LRED + CHANNEL + mod.colors.DEFAULT)
     print(
-    "           Password     : "+ mod.colors.LRED + PASS + mod.colors.DEFAULT)
+    "                    Password     : "+ mod.colors.LRED + PASS + mod.colors.DEFAULT)
     print(
-    "           DHCP Start   : " + mod.colors.LRED + DHCPStart + mod.colors.DEFAULT)
+    "                    DHCP Start   : " + mod.colors.LRED + DHCPStart + mod.colors.DEFAULT)
     print(
-    "           DHCP Stop    : " + mod.colors.LRED + DHCPStop + mod.colors.DEFAULT)
+    "                    DHCP Stop    : " + mod.colors.LRED + DHCPStop + mod.colors.DEFAULT)
     print(
-    "           DNS Server   : " + mod.colors.LRED + DNS + mod.colors.DEFAULT)
+    "                    DNS Server   : " + mod.colors.LRED + DNS + mod.colors.DEFAULT)
     print(
-    "           Status       : " + mod.colors.LRED + STATUS + mod.colors.DEFAULT)
+    "                    Status       : " + mod.colors.LRED + STATUS + mod.colors.DEFAULT)
     print(mod.colors.LGREEN + 
-  "\n          *****************************\n" + mod.colors.DEFAULT)
-InfosHeader()
-slp(10)
+  "\n                ***********************************\n" + mod.colors.DEFAULT)
+
 while jump == 0:
     mod.WelcomeHeader()
 
-#Things're getting serious ;)
+    ################Menu
+
     if (waitincrement == 0):
         slp(1)
         waitincrement = 1
-    print("        [" + mod.colors.LGREEN + "*" + mod.colors.DEFAULT + "] There are three ways to create a Rogue Access Point :")
+        
+    print("\n" + info + "There are three ways to create a Rogue Access Point :")
+    print(mod.colors.BLUE + "\n            1" + mod.colors.DEFAULT + ") Evil Twin Access Point")
+    print(mod.colors.BLUE + "\n            2" + mod.colors.DEFAULT + ") Honey Pot")
+    print(mod.colors.BLUE + "\n            3" + mod.colors.DEFAULT + ") Karma-Attack Access Point")
 
-    print(mod.colors.BLUE + 
-"\n            1" + mod.colors.DEFAULT + ") Evil Twin Access Point")
-    print(mod.colors.BLUE + 
-"\n            2" + mod.colors.DEFAULT + ") Honey Pot")
-    print(mod.colors.BLUE + 
-"\n            3" + mod.colors.DEFAULT + ") Karma Attack Access Point")
-
-    APWay = raw_input(
-"\n        [" + mod.colors.YELLOW + "?" + mod.colors.DEFAULT + "] Which one do you want to use ? ")
+    print("\n"+ ask +"Which one do you want to use ? \n\n")
+    APWay = raw_input(answer)
     try:
         APWay = int(APWay)
     except:
-        print(
-"\n           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] Invalide answer !")
-        slp(2)
-        continue
-    if (APWay == 1):
-            #INSERT EVIL TWIN HERE
-            #AIRPLAY-NG, HOSTAPD, etc...
-        print(
-"\n           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] " + "This part is not finished yet...")
-        slp(2)
-        continue
-    elif (APWay == 3):
-            #INSERT KARMA ATTACK HERE
-        print(
-"\n           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] This part is not finished yet...")
-        slp(2)
-        continue
-    elif APWay == 2:
-        jump = 2
-        break
-    else:
-        print(
-"\n           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] Invalide answer !")
+        print("\n"+ error + "Invalide answer !")
         slp(2)
         continue
     
-DNStart = input(
-"Give me a starting DHCP address for this fake AP clients (e.g. 10.0.0.50)\n--> ")
-DNStop = input("Give me a stopping DHCP address (e.g. 10.0.0.150)\n--> ")
+    ################Choice 
+    
+    if (APWay == 1):
+            #INSERT EVIL TWIN HERE
+            #AIRPLAY-NG, HOSTAPD, etc...
+        print("\n"+error+"This part is not finished yet...")
+        slp(2)
+        continue
+    
+    elif (APWay == 3):
+            #INSERT KARMA ATTACK HERE
+        print("\n"+error+"This part is not finished yet...")
+        slp(2)
+        continue
+    
+    elif APWay == 2:
+        choicemade = 2  #Set the mode
+        MODE = "Honey Pot"
+        jump = 2        #Set where to go now
+        break
+    
+    else:
+        print("\n           [" + mod.colors.LRED + "!" + mod.colors.DEFAULT + "] Invalide answer !")
+        slp(2)
+        continue
 
+   ################Setting up DHCP
+while jump == 2:
+    InfosHeader()
+    print("\n"+ ask+"Starting DHCP address (e.g. 10.0.0.50) ?")
+    DHCPStart = raw_input(answer)
+    DHCPStop = raw_input(answer)
+    
 #Create the dnsmasq config file
 f = open('dnsmasq.conf', 'w')
 f.write('interface=at0\n' +
-'dhcp-range='+ DNStart + ',' + DNStop + ',12h\n' +
+'dhcp-range='+ DHCPStart + ',' + DHCPStop + ',12h\n' +
 'server=80.67.169.12\n' +
 'server=80.67.169.40\n')             #These DNSs do not log your web-activity
 f.close()
