@@ -7,17 +7,6 @@ Version: 0.1
 '''
 import os
 
-def ReadFile(Path=''):
-    File=open(Path, 'r')
-    Data=File.read()
-    File.close()
-    return Data
-
-def WriteInFile(Path='', Data=''):
-    File=open(Path, 'w')
-    File.write(Data)
-    File.close()
-
 class colors:
     DEFAULT = '\033[0m'
     BLACK = '\033[0;30m'
@@ -40,17 +29,21 @@ class colors:
 def WelcomeHeader():
     #Printing the Welcome Message
     os.system('clear')
-    print(colors.LGREEN + 
-    "\n               ********************************************\n" + colors.DEFAULT)
+    print(colors.LGREEN + "\n               ********************************************\n" + colors.DEFAULT)
 
-    print(colors.LCYAN +
-"                      Welcome to EasyRogue.py v0.1 !!    " + colors.DEFAULT)
-    print(
-"\n                   Aircrack-suite, hostapd and dnsmasq   " + 
-"\n                       are " + colors.LRED + "required " + colors.DEFAULT + "to proceed.")
-    print(colors.LGREEN + 
-"\n               ********************************************\n" + colors.DEFAULT)
+    print(colors.LCYAN +"                      Welcome to EasyRogue.py v0.1 !!    " + colors.DEFAULT)
+    print("\n                   Aircrack-suite, hostapd and dnsmasq   " + "\n                       are " + colors.LRED + "required " + colors.DEFAULT + "to proceed.")
+    print(colors.LGREEN + "\n               ********************************************\n" + colors.DEFAULT)
 
-def VariableValidate(Variable):
-    Var = colors.LCYAN + Variable + colors.DEFAULT
+def VariableColoring(Color, Variable):
+    if Color == "C":
+        Var = colors.LCYAN + Variable + colors.DEFAULT
+    elif Color == "G":
+        Var = colors.LGREEN + Variable + colors.DEFAULT
+    elif Color == "R":
+        Var = colors.LRED + Variable + colors.DEFAULT
+    else:
+        return Variable
+    
     return Var
+
