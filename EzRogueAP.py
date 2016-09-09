@@ -6,6 +6,17 @@ Description: Little script that helps you creating a fake access point
 Version: 0.1 "Just getting the script working, enhancments are coming ;)"
 '''
 
+### Jump Index
+#jump 0 : Welcome Menu, choosing the Fake AP Mode
+#jump 1 : Choosing the target of the Evil Twin Attack
+#jump 2 : Setting up the DHCP Server
+#jump 3 : Setting up the Karma-Attack AP
+#jump 4 : Creating dnsmasq config file
+#jump 5 : Choosing the interface to put into monitor mode
+#jump 6 : Setting up the ESSID
+#jump 7 :
+
+
 #Getting ready
 from os import system
 from time import sleep as slp
@@ -23,7 +34,7 @@ ask =          "        [" + mod.colors.YELLOW + "?" + mod.colors.DEFAULT + "] "
 info =         "        [" + mod.colors.LGREEN + "*" + mod.colors.DEFAULT + "] "
 answer =    "           [" + mod.colors.LCYAN  + ">" + mod.colors.DEFAULT + "] "
 error =     "           [" + mod.colors.LRED   + "!" + mod.colors.DEFAULT + "] "
-errorsoft = "           [" + mod.colors.YELLOW   + "!" + mod.colors.DEFAULT + "] "
+errorsoft = "           [" + mod.colors.YELLOW + "!" + mod.colors.DEFAULT + "] "
 
 #Config Infos
 MODE      = "Not Configured"
@@ -98,6 +109,8 @@ while jump == 0:
         print("\n"+error+"] Invalide answer !")
         slp(2)
         continue
+    
+    
 while jump == 2:
     ################Setting up DHCP
     exit_the_loop = 0
@@ -135,6 +148,8 @@ while jump == 2:
     else:
         Refresh = 0
         break
+    
+    
 while jump == 4:
     ################Create the dnsmasq config file
     f = open('dnsmasq.conf', 'w')
@@ -146,7 +161,9 @@ while jump == 4:
     system('dnsmasq -C dnsmasq.conf')
     jump = 5
     break
-while jump == 6:
+
+
+while jump == 5:
     ################Set up the monitor card
     exit_the_loop = 0
     InfosHeader()
@@ -176,42 +193,70 @@ while jump == 6:
         Refresh = 0
     else:
         break
-while jump == 5:
-    ################Set the monitor card
-    InfosHeader()
+    
+while jump == 6:
+    ############Now setting up ESSID of the fake AP
     exit_the_loop = 0
+    InfosHeader()
+    if Refresh == 0:
+        print("" + ask +"ESSID to broadcast ? (ex: FreeWifi)\n")
+        ESSID = mod.VariableColoring("G", raw_input(answer))
+        Refresh = 1
+        continue
     while exit_the_loop == 0:
         InfosHeader()
-        print(errorsoft + "This operation will interrupt your Wifi connection")
-        print(errorsoft + "and you would have to restart Kali Linux to get")
-        print(errorsoft + "Debian to recognize your wireless card again.")
-        print(errorsoft + "However, the next step of this script will let")
-        print(errorsoft + "you connect to Wifi through Terminal.\n")
-        
-        print(""+ask+"Continue ? Y/n\n")
+        print(""+ask+"Do you confirm this setting ? Y/n\n")
         confirm=raw_input(answer)
         if confirm == "y" or confirm == "Y":
             jump = 7
             exit_the_loop = 1
             break
         elif confirm == "n" or confirm == "N":
-            system('clear')
-            print("\n\n"+errorsoft+"Thank you for using EzRogueAP !")
-            slp(2)
-            system('clear')
-            exit()
+            ESSID = mod.VariableColoring("R", "Not Configured")
+            Refresh = 0
+            break
         else:
             print("\n"+error + "Invalide Answer !")
             slp(2)
             continue
     if exit_the_loop == 0:
         continue
+        Refresh = 0
     else:
         break
-#Now set up airbase-ng and your fake AP
 
-ssid = input("What ESSID do you want to broadcast at? \n--> ")
-channel = input("On which channel do you want to emit ? 1-11")
+while jump == 7:
+    ############Now setting up channel of emmission of the fake AP
+    exit_the_loop = 0
+    InfosHeader()
+    if Refresh == 0:
+        print("" + ask +"Channel to emit on ? (1-11)\n")
+        CHANNEL = mod.VariableColoring("G", raw_input(answer))
+        Refresh = 1
+        continue
+    while exit_the_loop == 0:
+        InfosHeader()
+        print(""+ask+"Do you confirm this setting ? Y/n\n")
+        confirm=raw_input(answer)
+        if confirm == "y" or confirm == "Y":
+            jump = 7
+            exit_the_loop = 1
+            break
+        elif confirm == "n" or confirm == "N":
+            CHANNEL = mod.VariableColoring("R", "Not Configured")
+            Refresh = 0
+            break
+        else:
+            print("\n"+error + "Invalide Answer !")
+            slp(2)
+            continue
+    if exit_the_loop == 0:
+        continue
+        Refresh = 0
+    else:
+        break
+
+
 system('airmon-ng start ' + interface)
 print "Now launching \"airbase-ng --essid %s mon0\"" % ssid
 system('airbase-ng --essid %s mon0 &>/dev/null &' % ssid)
