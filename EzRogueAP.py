@@ -25,7 +25,7 @@ import subprocess as sp
 
 #Variables
 waitincrement = 0
-jump = 2
+jump = 0
 choicemade = 0
 Refresh = 0
 
@@ -38,10 +38,9 @@ errorsoft = "           [" + mod.colors.YELLOW + "!" + mod.colors.DEFAULT + "] "
 
 #Config Infos
 MODE      = "Not Configured"
-MONITOR   = "Not Configured"
+WIRELESS  = "Not Configured"
 DHCPStart = "Not Configured"
 DHCPStop  = "Not Configured"
-DNS       = "Not Configured"
 ESSID     = "Not Configured"
 CHANNEL   = "Not Configured"
 PASS      = "Not Configured"
@@ -50,18 +49,17 @@ STATUS    = "Inactive"
 def InfosHeader():
     system('clear')
     #Printing informations about the config of the AP
-    print(mod.colors.LGREEN + "\n                ************************************" + mod.colors.DEFAULT)
-    print(mod.colors.LCYAN +"                    EasyRogue v0.1 Configuration\n" + mod.colors.DEFAULT)
-    print("                    Fake AP Mode : " + mod.colors.LRED + MODE + mod.colors.DEFAULT)
-    print("                    Monitor Card : " + mod.colors.LRED + MONITOR + mod.colors.DEFAULT)
-    print("                    ESSID        : " + mod.colors.LRED + ESSID + mod.colors.DEFAULT)
-    print("                    Channel      : " + mod.colors.LRED + CHANNEL + mod.colors.DEFAULT)
-    print("                    Password     : " + mod.colors.LRED + PASS + mod.colors.DEFAULT)
-    print("                    DHCP Start   : " + mod.colors.LRED + DHCPStart + mod.colors.DEFAULT)
-    print("                    DHCP Stop    : " + mod.colors.LRED + DHCPStop + mod.colors.DEFAULT)
-    print("                    DNS Server   : " + mod.colors.LRED + DNS + mod.colors.DEFAULT)
-    print("                    Status       : " + mod.colors.LRED + STATUS + mod.colors.DEFAULT)
-    print(mod.colors.LGREEN + "\n                ***********************************\n" + mod.colors.DEFAULT)
+    print(mod.colors.LGREEN + "\n        ************************************" + mod.colors.DEFAULT)
+    print(mod.colors.LCYAN +"           EasyRogue v0.1 Configuration\n" + mod.colors.DEFAULT)
+    print("            Fake AP Mode  : " + mod.colors.LRED + MODE         + mod.colors.DEFAULT)
+    print("            Wireless Card : " + mod.colors.LRED + WIRELESS     + mod.colors.DEFAULT)
+    print("            ESSID         : " + mod.colors.LRED + ESSID        + mod.colors.DEFAULT)
+    print("            Channel       : " + mod.colors.LRED + CHANNEL      + mod.colors.DEFAULT)
+    print("            Password      : " + mod.colors.LRED + PASS         + mod.colors.DEFAULT)
+    print("            DHCP Start    : " + mod.colors.LRED + DHCPStart    + mod.colors.DEFAULT)
+    print("            DHCP Stop     : " + mod.colors.LRED + DHCPStop     + mod.colors.DEFAULT)
+    print("            Status        : " + mod.colors.LRED + STATUS       + mod.colors.DEFAULT)
+    print(mod.colors.LGREEN + "\n        ***********************************\n" + mod.colors.DEFAULT)
 
 while jump == 0:
     ################Choose the Ap Mode
@@ -110,7 +108,6 @@ while jump == 0:
         slp(2)
         continue
     
-    
 while jump == 2:
     ################Setting up DHCP
     exit_the_loop = 0
@@ -149,7 +146,6 @@ while jump == 2:
         Refresh = 0
         break
     
-    
 while jump == 4:
     ################Create the dnsmasq config file
     f = open('dnsmasq.conf', 'w')
@@ -162,14 +158,13 @@ while jump == 4:
     jump = 5
     break
 
-
 while jump == 5:
-    ################Set up the monitor card
+    ################Choose the wireless card
     exit_the_loop = 0
     InfosHeader()
     if Refresh == 0:
-        print("" + ask +"Wireless interface to put into monitor mode ? (ex: wlan1)\n")
-        MONITOR = mod.VariableColoring("G", raw_input(answer))
+        print("" + ask +"Wireless interface to use ? (ex: wlan1)\n")
+        WIRELESS = mod.VariableColoring("G", raw_input(answer))
         Refresh = 1
         continue
     while exit_the_loop == 0:
@@ -177,17 +172,19 @@ while jump == 5:
         print(""+ask+"Do you confirm this setting ? Y/n\n")
         confirm=raw_input(answer)
         if confirm == "y" or confirm == "Y":
+            Refresh = 0
             jump = 6
             exit_the_loop = 1
             break
         elif confirm == "n" or confirm == "N":
-            MONITOR = mod.VariableColoring("R", "Not Configured")
+            WIRELESS = mod.VariableColoring("R", "Not Configured")
             Refresh = 0
             break
         else:
             print("\n"+error + "Invalide Answer !")
             slp(2)
             continue
+        
     if exit_the_loop == 0:
         continue
         Refresh = 0
@@ -208,6 +205,7 @@ while jump == 6:
         print(""+ask+"Do you confirm this setting ? Y/n\n")
         confirm=raw_input(answer)
         if confirm == "y" or confirm == "Y":
+            Refresh = 0
             jump = 7
             exit_the_loop = 1
             break
@@ -231,7 +229,17 @@ while jump == 7:
     InfosHeader()
     if Refresh == 0:
         print("" + ask +"Channel to emit on ? (1-11)\n")
-        CHANNEL = mod.VariableColoring("G", raw_input(answer))
+        try:
+            Chan = int(raw_input(answer))
+        except:
+            print("\n"+error+ "Invalide answer !")
+            slp(2)
+            continue
+        if Chan < 1 or Chan > 11:
+            print("\n"+error+ "Invalide answer !")
+            slp(2)
+            continue
+        CHANNEL = mod.VariableColoring("G",str(Chan))
         Refresh = 1
         continue
     while exit_the_loop == 0:
@@ -239,7 +247,8 @@ while jump == 7:
         print(""+ask+"Do you confirm this setting ? Y/n\n")
         confirm=raw_input(answer)
         if confirm == "y" or confirm == "Y":
-            jump = 7
+            Refresh = 0
+            jump = 8
             exit_the_loop = 1
             break
         elif confirm == "n" or confirm == "N":
@@ -256,6 +265,67 @@ while jump == 7:
     else:
         break
 
+while jump == 8:
+    InfosHeader
+    
+    ############Now setting up channel of emmission of the fake AP
+    exit_the_loop = 0
+    InfosHeader()
+    if Refresh == 0:
+        print("\n"+info+"Two options are available to set up a password on the AP")
+        if choicemade == 1:
+            print("\n"+info+"When you are setting up an Evil Twin AP, it's recommended to use")
+            print("\n"+info+"the same password as that of the target (if it has one).")
+            print(mod.colors.BLUE + "\n            1" + mod.colors.DEFAULT + ") No password")
+            print(mod.colors.BLUE + "\n            2" + mod.colors.DEFAULT + ") WPA2")
+            
+            print("\n"+ ask +"Which one do you want to set on your AP ? \n")
+            Pass = raw_input(answer)
+            try:
+                Pass = int(Pass)
+            except:
+                print("\n"+ error + "Invalide answer !")
+                slp(2)
+                continue
+            
+            if Pass == 1:
+                #No Password
+                PASS = mod.VariableColoring("G", "--NO PASSWORD--")
+                
+            elif Pass == 2:
+                #WPA2
+                InfosHeader
+                print(ask+"Which password do you want to set on your AP ?")
+                PaSS = raw_input(answer)
+                if len(PaSS) < 8:
+                    print("\n"+error+"A WPA2 password must at least 8 characters long !")
+                    slp(2)
+                    continue
+                PASS = mod.VariableColoring("G", "PaSS")
+            else:
+                print("\n"+ error + "Invalide answer !")
+                slp(2)
+                continue
+        
+    while exit_the_loop == 0:
+        InfosHeader()
+        print(""+ask+"Do you confirm this setting ? Y/n\n")
+        confirm=raw_input(answer)
+        if confirm == "y" or confirm == "Y":
+            jump = 8
+            exit_the_loop = 1
+            break
+        elif confirm == "n" or confirm == "N":
+            PASS = mod.VariableColoring("R", "Not Configured")
+            break
+        else:
+            print("\n"+error + "Invalide Answer !")
+            slp(2)
+            continue
+    if exit_the_loop == 0:
+        continue
+    else:
+        break
 
 system('airmon-ng start ' + interface)
 print "Now launching \"airbase-ng --essid %s mon0\"" % ssid
