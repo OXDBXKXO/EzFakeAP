@@ -1,13 +1,7 @@
-EzFakeAP.py
+EzFakeAP
 ==========
-The goal of this Python script is to help setting up the tree different types of
-Fake Access Point, it means : Honey Pot, Evil Twin and Karma-Attack AP
+This Python script allows easy setup of rogue WiFi Access Point to perform Evil-Twin WiFi attack.
 
+Next to be done :
 
-Feel free to make any pull request if you have any idea of improvment !
-
-To-Do List :
-
-- Karma-Attack Access Point
-- Evil Twin Access Point
 - Replace airbase-ng by hostapd (performance)
